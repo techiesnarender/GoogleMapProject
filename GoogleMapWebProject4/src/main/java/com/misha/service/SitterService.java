@@ -1,0 +1,63 @@
+package com.misha.service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.misha.model.SitterRegistration;
+import com.misha.repository.SitterRepository;
+
+
+@Service
+@Transactional
+public class SitterService {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(SitterService.class);
+	
+	@Autowired
+	private final SitterRepository sitterRepository;
+
+	public SitterService(SitterRepository sitterRepository) {
+		this.sitterRepository = sitterRepository;
+	}
+
+	public void saveSitter(SitterRegistration sitterRegistration) {
+		sitterRepository.save(sitterRegistration);
+	}
+	
+	public List<SitterRegistration> showAllSitterNearByMe(String address, String latitude, String longitude){	
+		LOGGER.debug("Searching");
+		return sitterRepository.findByAddressAndSort(address, latitude, longitude);	
+	}
+
+	/*
+	 * public void showAllSitterNearByMe(){ SitterRegistration sitter = new
+	 * SitterRegistration(); List<SitterRegistration> sitters = new ArrayList<>();
+	 * sitterRepository.findByAddressAndSort(sitter.getAddress());
+	 * System.out.println(sitters); }
+	 */
+	 
+	public List<SitterRegistration> showAllSitter(){
+		List<SitterRegistration> sitters = new ArrayList<SitterRegistration>();
+		for(SitterRegistration sitter: sitterRepository.findAll()) {
+			sitters.add(sitter);
+		}
+		return sitters;
+	}
+	
+	/*
+	 * public SitterRegistration updateAccount(String id, SitterRegistration sitter)
+	 * {
+	 * 
+	 * SitterRegistration userSitter = new SitterRegistration();
+	 * 
+	 * }
+	 */
+}
